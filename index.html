@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="StopTimer - The Traffic Flow Tracker">
+        <meta name="author" content="Aiden">
+        <meta name="keywords" content="StopTimer, Aiden, Ethan" >
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" type="icon/ico" href="stoplight.ico"/>
+        <title>StopTimer</title>
+    </head>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        .header {
+            text-align: center;
+            width: 100%;
+            background-color: #D5D8E0;
+            font-family: Montserrat;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <body style="border: 0px; padding: 0px; margin: 0;">
+        <div class="header">
+            <table style="margin-left: auto; margin-right:auto;">
+                <tr align="center">
+                    <td> 
+                        <img src="Stoplight.png" width="20 px" align="right"> 
+                    </td>
+                    <td>
+                        <h1 style="text-align: center; font-size: 50px; line-height: 0; height: 0; padding-left: 10px;">StopTimer</h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <h3 style="text-align: center; padding-top: 0px; line-height: 0px;">The Traffic Flow Tracker</h3>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="body">
+            <button onclick="locate()" id="locate" type="button" style="color: green; width: 200px; height: 50px; font-size: 25px;">Locate</button> 
+            <textarea id="latitude" readonly style="width: 20%; height: 500px; font-family: 'Courier New', Courier, monospace;"></textarea>
+            <textarea id="longitude" readonly style="width: 20%; height: 500px; font-family: 'Courier New', Courier, monospace;"></textarea>
+        </div>
+
+        <script>
+            function locate() {
+                latitude = 1;
+                longitude = 2;
+                latitude = GeolocationCoordinates.latitude;
+                longitude = GeolocationCoordinates.longitude;
+                document.getElementById('latitude').innerHTML = latitude;
+                document.getElementById('longitude').innerHTML = longitude;
+            }
+        </script>
+    </body>
+    </html>
