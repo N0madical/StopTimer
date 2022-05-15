@@ -52,10 +52,16 @@
 
         <script>
             function locate(position) {
-                latitude = 1;
-                longitude = 2;
-                latitude = position.coords.latitude;
-                longitude = position.coords.longitude;
+                status.textContent = 'Locating…';
+                navigator.geolocation.getCurrentPosition(success, error);
+                function success(position) {
+                    latitude = position.coords.latitude;
+                    longitude = position.coords.longitude;
+                }
+                function error() {
+                    latitude = 'Unable to retrieve your location'
+                    longitude = 'Unable to retrieve your location'
+                }
                 document.getElementById('latitude').innerHTML = latitude;
                 document.getElementById('longitude').innerHTML = longitude;
             }
