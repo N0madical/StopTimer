@@ -51,27 +51,34 @@
         </div>
 
         <script>
-            latitude = 'Location not allowed, please allow and click locate again.'
-            longitude = 'Location not allowed, please allow and click locate again.'
             function locate(position) {
+                document.getElementById('latitude').innerHTML = "Locating...";
+                document.getElementById('longitude').innerHTML = "Locating...";
                 navigator.geolocation.getCurrentPosition(success, error);
                 function success(position) {
                     latitude = 'Latitude: ' + position.coords.latitude;
                     longitude = 'Longitude: ' + position.coords.longitude;
+                    if (latitude == "") {
+                    document.getElementById('latitude').innerHTML = "Unable to retreive location";
+                    document.getElementById('longitude').innerHTML = "Unable to retreive location";
+                    }
+                    if (latitude != "") {
+                        document.getElementById('latitude').innerHTML = latitude;
+                        document.getElementById('longitude').innerHTML = longitude;
+                    }
                 }
                 function error() {
                     latitude = 'Unable to retrieve your location'
                     longitude = 'Unable to retrieve your location'
-                }
-                if (latitude == "") {
+                    if (latitude == "") {
                     document.getElementById('latitude').innerHTML = "Unable to retreive location";
                     document.getElementById('longitude').innerHTML = "Unable to retreive location";
+                    }
+                    if (latitude != "") {
+                        document.getElementById('latitude').innerHTML = latitude;
+                        document.getElementById('longitude').innerHTML = longitude;
+                    }
                 }
-                if (latitude != "") {
-                    document.getElementById('latitude').innerHTML = latitude;
-                    document.getElementById('longitude').innerHTML = longitude;
-                }
-                
             }
         </script>
     </body>
