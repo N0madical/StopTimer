@@ -51,11 +51,11 @@
         </div>
 
         <script>
-            function locate() {
+            function locate(position) {
                 latitude = 1;
                 longitude = 2;
-                latitude = GeolocationCoordinates.latitude;
-                longitude = GeolocationCoordinates.longitude;
+                latitude = position.coords.latitude;
+                longitude = position.coords.longitude;
                 document.getElementById('latitude').innerHTML = latitude;
                 document.getElementById('longitude').innerHTML = longitude;
             }
