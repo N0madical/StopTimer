@@ -45,41 +45,56 @@
             </table>
         </div>
         <div class="body">
-            <button onclick="locate()" id="locate" type="button" style="color: green; width: 200px; height: 50px; font-size: 25px;">Locate</button> 
-            <textarea id="latitude" readonly style="width: 20%; height: 500px; font-family: 'Courier New', Courier, monospace;"></textarea>
-            <textarea id="longitude" readonly style="width: 20%; height: 500px; font-family: 'Courier New', Courier, monospace;"></textarea>
+            <button onclick="status()" id="status" type="button" style="color: green; width: 200px; height: 50px; font-size: 25px;">Check</button> 
+            <textarea id="output" readonly style="width: 20%; height: 500px; font-family: 'Courier New', Courier, monospace;"></textarea>
         </div>
 
         <script>
-            function locate(position) {
-                document.getElementById('latitude').innerHTML = "Locating...";
-                document.getElementById('longitude').innerHTML = "Locating...";
+
+            function status(position) {
+                var line = 1
+                var txt = 0
+                latitude = 29.715047
+                longitude = -95.414904
+                usercoords = (Math.round(1000*latitude)/1000) + ', ' + (Math.round(1000*longitude)/1000)
+                var client = new XMLHttpRequest();
+                client.open('GET', '/coords.txt');
+                client.onreadystatechange = function()
+                {
+                    var txt = client.responseText.split("\n");
+                    document.getElementById('output').innerHTML = client
+                    while (line < 2) {
+                        //document.getElementById('output').innerHTML = txt[line]
+                        line = line + 1
+                    }
+                }
+                client.send();
+            }
+        </script>
+    </body>
+    </html>
+
+<!--
+    document.getElementById('output').innerHTML = "Locating...";
                 navigator.geolocation.getCurrentPosition(success, error);
                 function success(position) {
                     latitude = 'Latitude: ' + position.coords.latitude;
                     longitude = 'Longitude: ' + position.coords.longitude;
                     if (latitude == "") {
-                    document.getElementById('latitude').innerHTML = "Unable to retreive location";
-                    document.getElementById('longitude').innerHTML = "Unable to retreive location";
+                    document.getElementById('output').innerHTML = "Unable to retreive location";
                     }
                     if (latitude != "") {
-                        document.getElementById('latitude').innerHTML = latitude;
-                        document.getElementById('longitude').innerHTML = longitude;
+                        document.getElementById('output').innerHTML = latitude;
                     }
                 }
                 function error() {
                     latitude = 'Unable to retrieve your location'
                     longitude = 'Unable to retrieve your location'
                     if (latitude == "") {
-                    document.getElementById('latitude').innerHTML = "Unable to retreive location";
-                    document.getElementById('longitude').innerHTML = "Unable to retreive location";
+                    document.getElementById('output').innerHTML = "Unable to retreive location";
                     }
                     if (latitude != "") {
-                        document.getElementById('latitude').innerHTML = latitude;
-                        document.getElementById('longitude').innerHTML = longitude;
+                        document.getElementById('output').innerHTML = latitude;
                     }
                 }
-            }
-        </script>
-    </body>
-    </html>
+-->
