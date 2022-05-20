@@ -128,21 +128,21 @@
                     latitude = document.getElementById('Latitude').value;
                     longitude = document.getElementById('Longitude').value;
                     run(position)
-                    
                 } else {
-                    navigator.geolocation.getCurrentPosition(success, error);
-                    latitude = position.coords.latitude;
-                    longitude = position.coords.longitude;
+                    navigator.geolocation.getCurrentPosition(run, error);
                 }
                 
                 function error() {
                     document.getElementById('Status').innerHTML = "Please allow location access"  
                 }
 
-                function success(position) {
-                    run(position)
-                }
                 function run(position) {
+
+                    if (!userimp) {
+                        latitude = position.coords.latitude;
+                        longitude = position.coords.longitude;
+                    }
+
                     // Set text box
                     usercoords = (Math.round(1000*latitude)/1000) + ', ' + (Math.round(1000*longitude)/1000)
                     line = coordslist.findIndex(element => element.includes(usercoords));
