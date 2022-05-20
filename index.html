@@ -33,7 +33,7 @@
             font-family: Montserrat;
         }
     </style>
-    <body style="border: 0px; padding: 0px; margin: 0;">
+    <body style="border: 0px; padding: 0px; margin: 0; font-family: Montserrat;">
         <div class="header">
             <table style="margin-left: auto; margin-right:auto;">
                 <tr align="center">
@@ -53,7 +53,7 @@
         </div>
         <div class="body">
             <!-- <img src="lightgreen.png" width="400 px" align="center"> -->
-            <table style="margin-left: auto; margin-right:auto; text-align: center;" border="1px solid black">
+            <table style="margin-left: auto; margin-right:auto; text-align: center;">
                 <tr>
                     <td colspan="3" class="padding" style="font-size: 50px;">
                         <p id="Status" ></p>
@@ -76,7 +76,37 @@
                     </td>
                 </tr>
                 <tr>
-                    <td colspan="3" style="padding-top: 40px">
+                    <td colspan="3">
+                        <hr style="border-top: 3px dashed #bbb;">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <p>
+                            Type coordinates manually in here to override automatic location sensing
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top: 0px">
+                        <p>Latitude</p>
+                    </td>
+                    <td></td>
+                    <td style="padding-top: 0px">
+                        <p>Longitude</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-top: 0px">
+                        <input type="text" id="Latitude" size="10">
+                    </td>
+                    <td></td>
+                    <td style="padding-top: 0px">
+                        <input type="text" id="Longitude" size="10">
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="padding-top: 20px">
                         <button onclick="status()" id="status" type="button" style="color: green; width: 200px; height: 50px; font-size: 25px; margin-left: auto; margin-right: auto;">Check</button>
                     </td>
                 </tr>
@@ -88,13 +118,31 @@
             function status(position) {
                 var d = new Date();
                 time = ((d.getHours()) * 3600) + ((d.getMinutes())*60) + (d.getSeconds())
-
+                if (document.getElementById('Latitude').value != "") {
+                    userimp = true
+                } else {
+                    userimp = false
+                }
                 // Find location
-                navigator.geolocation.getCurrentPosition(success, error);
-                function success(position) {
-                    latitude = 29.715 //position.coords.latitude;
-                    longitude = -95.415 //position.coords.longitude;
+                if (userimp){
+                    latitude = document.getElementById('Latitude').value;
+                    longitude = document.getElementById('Longitude').value;
+                    run(position)
+                    
+                } else {
+                    navigator.geolocation.getCurrentPosition(success, error);
+                    latitude = position.coords.latitude;
+                    longitude = position.coords.longitude;
+                }
+                
+                function error() {
+                    document.getElementById('Status').innerHTML = "Please allow location access"  
+                }
 
+                function success(position) {
+                    run(position)
+                }
+                function run(position) {
                     // Set text box
                     usercoords = (Math.round(1000*latitude)/1000) + ', ' + (Math.round(1000*longitude)/1000)
                     line = coordslist.findIndex(element => element.includes(usercoords));
@@ -179,7 +227,7 @@
                         if(color == 'green') {
 
                             document.getElementById("stoplight").src="lightgreen.png";
-                            
+
                         } else {
                             if (color == 'yellow') {
 
@@ -195,9 +243,6 @@
                     } else {
                         document.getElementById('Status').innerHTML = "You are not currently at a recorded stoplight."
                     }
-                }
-                function error() {
-                    document.getElementById('Status').innerHTML = "Please allow location access"
                 }
             }
         </script>
