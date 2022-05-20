@@ -11,6 +11,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut icon" type="icon/ico" href="stoplight.ico"/>
         <title>StopTimer</title>
+        <script type="text/javascript" src="coords.js"></script>
     </head>
     <style>
         * {
@@ -24,6 +25,12 @@
             font-family: Montserrat;
             margin: 0;
             padding: 0;
+        }
+
+        .padding {
+            padding-left: 20px;
+            padding-right: 20px;
+            font-family: Montserrat;
         }
     </style>
     <body style="border: 0px; padding: 0px; margin: 0;">
@@ -45,56 +52,154 @@
             </table>
         </div>
         <div class="body">
-            <button onclick="status()" id="status" type="button" style="color: green; width: 200px; height: 50px; font-size: 25px;">Check</button> 
-            <textarea id="output" readonly style="width: 20%; height: 500px; font-family: 'Courier New', Courier, monospace;"></textarea>
+            <!-- <img src="lightgreen.png" width="400 px" align="center"> -->
+            <table style="margin-left: auto; margin-right:auto; text-align: center;" border="1px solid black">
+                <tr>
+                    <td colspan="3" class="padding" style="font-size: 50px;">
+                        <p id="Status" ></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
+                        <img id="stoplight" src="lightgreen.png" width="400 px" align="center">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p id="Green" class="padding"></p>
+                    </td>
+                    <td>
+                        <p id="Yellow" class="padding"></p>
+                    </td>
+                    <td>
+                        <p id="Red" class="padding"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="padding-top: 40px">
+                        <button onclick="status()" id="status" type="button" style="color: green; width: 200px; height: 50px; font-size: 25px; margin-left: auto; margin-right: auto;">Check</button>
+                    </td>
+                </tr>
+            </table>
+            
         </div>
 
         <script>
-
             function status(position) {
-                var line = 1
-                var txt = 0
-                latitude = 29.715047
-                longitude = -95.414904
-                usercoords = (Math.round(1000*latitude)/1000) + ', ' + (Math.round(1000*longitude)/1000)
-                var client = new XMLHttpRequest();
-                client.open('GET', '/coords.txt');
-                client.onreadystatechange = function()
-                {
-                    var txt = client.responseText.split("\n");
-                    document.getElementById('output').innerHTML = client
-                    while (line < 2) {
-                        document.getElementById('output').innerHTML = txt[line]
-                        line = line + 1
+                var d = new Date();
+                time = ((d.getHours()) * 3600) + ((d.getMinutes())*60) + (d.getSeconds())
+
+                // Find location
+                navigator.geolocation.getCurrentPosition(success, error);
+                function success(position) {
+                    latitude = 29.715 //position.coords.latitude;
+                    longitude = -95.415 //position.coords.longitude;
+
+                    // Set text box
+                    usercoords = (Math.round(1000*latitude)/1000) + ', ' + (Math.round(1000*longitude)/1000)
+                    line = coordslist.findIndex(element => element.includes(usercoords));
+                    var dr = downred.at(line);
+                    var dy = downyellow.at(line);
+                    var dg = downgreen.at(line);
+                    var pr = popularred.at(line);
+                    var py = popularyellow.at(line);
+                    var pg = populargreen.at(line);
+                    if (line >= 0) {
+
+                        //Find current light color
+                        if (time >= 0 & time < 19800) { //AM downtime
+                            cycletime = ((time / dr) - (Math.floor(time / dr))) * 100
+                            if (cycletime <= dg/dr*100) {
+                                color = 'green'
+                            } else {
+                                if (cycletime <= dy/dr*100 & cycletime > dg/dr*100) {
+                                    color = 'yellow'
+                                } else {
+                                    color = 'red'
+                                }
+                            }
+                        }
+
+                        if (time >= 19800 & time < 34200) { //AM popular
+                            cycletime = (((time - 19800) / popularred) - (Math.floor((time - 19800) / popularred))) * 100
+                            if (cycletime <= pg/pr*100) {
+                                color = 'green'
+                            } else {
+                                if (cycletime <= py/pr*100 & cycletime > pg/pr*100) {
+                                    color = 'yellow'
+                                } else {
+                                    color = 'red'
+                                }
+                            }
+                        }
+
+                        if (time >= 34200 & time < 54000) { //Midday downtime
+                            cycletime = (((time - 34200) / dr) - (Math.floor((time - 34200) / dr))) * 100
+                            if (cycletime <= dg/dr*100) {
+                                color = 'green'
+                            } else {
+                                if (cycletime <= dy/dr*100 & cycletime > dg/dr*100) {
+                                    color = 'yellow'
+                                } else {
+                                    color = 'red'
+                                }
+                            }
+                        }
+
+                        if (time >= 54000 & time < 68400) { //PM popular
+                            cycletime = (((time - 54000) / popularred) - (Math.floor((time - 54000) / popularred))) * 100
+                            if (cycletime <= pg/pr*100) {
+                                color = 'green'
+                            } else {
+                                if (cycletime <= py/pr*100 & cycletime > pg/pr*100) {
+                                    color = 'yellow'
+                                } else {
+                                    color = 'red'
+                                }
+                            }
+                        }
+
+                        if (time >= 68400 & time < 86400) { //PM downtime
+                            cycletime = (((time - 68400) / dr) - (Math.floor((time - 68400) / dr))) * 100
+                            if (cycletime <= dg/dr*100) {
+                                color = 'green'
+                            } else {
+                                if (cycletime <= dy/dr*100 & cycletime > dg/dr*100) {
+                                    color = 'yellow'
+                                } else {
+                                    color = 'red'
+                                }
+                            }
+                        }
+
+                        document.getElementById('Status').innerHTML = "The light on " + street1.at(line) + " at the intersection of " + street2.at(line) + " is currently " + color + "."
+                        document.getElementById('Green').innerHTML = "The light will next be green at "
+                        document.getElementById('Yellow').innerHTML = "The light will next be yellow at "
+                        document.getElementById('Red').innerHTML = "The light will next be red at "
+                        if(color == 'green') {
+
+                            document.getElementById("stoplight").src="lightgreen.png";
+                            
+                        } else {
+                            if (color == 'yellow') {
+
+                                document.getElementById("stoplight").src="lightyellow.png";
+
+                                
+                            } else {
+
+                                    document.getElementById("stoplight").src="lightred.png";
+
+                                }
+                        }
+                    } else {
+                        document.getElementById('Status').innerHTML = "You are not currently at a recorded stoplight."
                     }
                 }
-                client.send();
+                function error() {
+                    document.getElementById('Status').innerHTML = "Please allow location access"
+                }
             }
         </script>
     </body>
     </html>
-
-<!--
-    document.getElementById('output').innerHTML = "Locating...";
-                navigator.geolocation.getCurrentPosition(success, error);
-                function success(position) {
-                    latitude = 'Latitude: ' + position.coords.latitude;
-                    longitude = 'Longitude: ' + position.coords.longitude;
-                    if (latitude == "") {
-                    document.getElementById('output').innerHTML = "Unable to retreive location";
-                    }
-                    if (latitude != "") {
-                        document.getElementById('output').innerHTML = latitude;
-                    }
-                }
-                function error() {
-                    latitude = 'Unable to retrieve your location'
-                    longitude = 'Unable to retrieve your location'
-                    if (latitude == "") {
-                    document.getElementById('output').innerHTML = "Unable to retreive location";
-                    }
-                    if (latitude != "") {
-                        document.getElementById('output').innerHTML = latitude;
-                    }
-                }
--->
